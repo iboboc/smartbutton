@@ -29,6 +29,24 @@ function file_exists(name)
    if fileresult~=nil then file.close(fileresult) return true else return false end
 end
 
+-- count the button pushes and store in a local txt file
+if file_exists("pushes.txt") then 
+    file.open("pushes.txt", "r")
+    psh = file.readline()
+    file.close()
+    psh = psh+1
+    print("Button has been pushed "..psh.." times.")
+else
+   print("Button has been pushed for the first time.")
+   psh = 1
+end
+    file.remove("pushes.txt")
+    tmr.delay(1000)
+    file.open("pushes.txt", "w")
+    file.write(psh)
+    file.flush()
+    file.close()
+
 -- if customurl file is set (exists) then we load the url
 if file_exists("customurl.txt") then 
     print("Custom URL")
