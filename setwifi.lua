@@ -9,6 +9,13 @@ function unescape (s)
    return s
 end
 
+-- if not set up in 60s then shutdown
+tmr.alarm(0, 60000, 1, function()
+ print("Button is on and nothing is happening.")
+-- set GPIO00(3) to LOW linked to CH_PD (will shutdown the module)
+ gpio.write(3, gpio.LOW)
+    end)
+
 print("Entering wifi setup..")
 -- make sure red LED is on
 gpio.write(red,gpio.HIGH)
@@ -27,7 +34,6 @@ ipcfg={}
     ipcfg.netmask="255.255.255.0"
     ipcfg.gateway="192.168.1.1"
 wifi.ap.setip(ipcfg)
-
 
 -- starting webserver and set up the files to be served
 local httpRequest={}
@@ -75,7 +81,6 @@ srv:listen(80,function(conn)
                 tmr.alarm(0, 5000, 1, function()
                 wifi.setmode(wifi.STATION);
                 wifi.sta.config(formDATA.ssid,formDATA.password);
---all values are deleted, on next button press it will go into configuration mode
                 print("Settings saved, please restart.")         
                 node.restart()       
                 end)
@@ -86,8 +91,6 @@ srv:listen(80,function(conn)
             print("[Sending file "..requestFile.."]");            
             filePos=0;
             conn:send("HTTP/1.1 200 OK\r\nContent-Type: "..getContentType[path].."\r\n\r\n");  
--- sau aici?
-                      
         else
             print("[File "..path.." not found]");
             conn:send("HTTP/1.1 404 Not Found\r\n\r\n")
@@ -108,7 +111,6 @@ srv:listen(80,function(conn)
                     if (string.len(partial_data)==512) then
                         return;
                     end
-                   
                 end
             else
                 print("[Error opening file"..requestFile.."]");
