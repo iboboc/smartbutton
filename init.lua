@@ -65,7 +65,16 @@ if wifi.sta.getip()== nil then
     print("(" .. cnt .. ") Waiting for IP...")
     if cnt == 10 then
         tmr.stop(1)
-        dofile("setwifi.lua")
+        --shutdown if cannot connect to wifi
+           gpio.write(3, gpio.LOW)
+        --If ESP is enabled after 2 seconds that means the button is still pushed!
+        --in this case, will reset the configuration
+        tmr.alarm(0, 2000, 1, function()
+        print("Button is still pressed.")
+        wifi.sta.disconnect()
+        wifi.sta.config("","")
+        file.remove('customurl.txt')
+        end)
     end
 else
     tmr.stop(1)
