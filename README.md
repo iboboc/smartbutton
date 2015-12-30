@@ -14,7 +14,7 @@ With this code, we send a notification online (in cloud) by pressing a button.
 
 ### Setting up your hardware
 
-TBD
+Please read this https://www.hackster.io/iboboc/smartbutton-pro-06ce5d
 
 ### Code logic explained:
 
